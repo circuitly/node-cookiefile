@@ -1,6 +1,9 @@
 {
-  "name": "cookiefile",
-  "version": "1.0.9",
+  "name": "@circuitly/cookiefile",
+  "publishConfig": {
+    "access": "public"
+  },
+  "version": "1.0.21",
   "description": "Package for operating with Netscape HTTP Cookie File",
   "main": "http-cookiefile.js",
   "directories": {
@@ -11,7 +14,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/horat1us/node-cookiefile.git"
+    "url": "git+https://github.com/circuitly/node-cookiefile.git"
   },
   "keywords": [
     "libcurl",

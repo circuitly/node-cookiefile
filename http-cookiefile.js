@@ -23,6 +23,11 @@ module.exports = {
             return this.cookieName;
         }
 
+        /** @return {String} */
+        get key() {
+            return `${this.domain}-${this.cookieName}`;
+        }
+        
         get isCrossDomain() {
             return this.crossDomain.toString().toUpperCase();
         }
@@ -48,7 +53,7 @@ module.exports = {
         }
 
         toHeader() {
-            return `${this.name}=${this.value}; `;
+            return `${this.name}=${this.value}`;
         }
 
         toResponseHeader() {
@@ -195,6 +200,20 @@ module.exports = {
         }
 
         /**
+         * @param {String} url
+         * @return {String}
+         */
+        requestHeader(url) {
+            let cookies = []
+            this.forEach(cookie => {
+                if(url.indexOf(cookie.domain.substr(1)) !== -1) {
+                    cookies.push(cookie)
+                }
+            })
+            return {'Cookie': `${cookies.map(cookie => cookie.toHeader()).join("; ")}`};
+        }
+
+        /**
          * Takes sample HTTP Cookie and return true if set-cookie header given
          * @param {String} header HTTP Header like Set-Cookie: ...
          */
@@ -212,7 +231,7 @@ module.exports = {
             if (!(cookie instanceof module.exports.Cookie)) {
                 throw new TypeError(`Cookie must be type of cookie, ${typeof(cookie)} given`);
             }
-            super.set(cookie.name, cookie);
+            super.set(cookie.key, cookie);
 
             return this;
         }
@@ -264,11 +283,11 @@ module.exports = {
              * @var {String} name
              * @var {Cookie} cookie
              */
+            const cookies = []
             for (let [, cookie] of this) {
-                string += cookie.toHeader();
+                cookies.push(cookie.toHeader());
             }
-
-            return string.replace(/;\s*$/, '');
+            return cookies.join("; ")
         }
 
         /**
